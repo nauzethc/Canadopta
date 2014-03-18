@@ -1,0 +1,34 @@
+<div ng-include="'partials/navbar'"></div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <ul>
+        <li ng-repeat="breed in breeds">{{ breed.name }}, {{ breed.origin }} <a ng-click="deleteBreed(breed._id, $index)"><span class="glyphicon glyphicon-remove"></span></a></li>
+    </ul>
+  </div>
+
+  <div class="col-sm-4">
+    <form name="breedForm" role="form" ng-submit="createBreed(form)">
+      <div class="form-group">
+        <label for="inputName">Name</label>
+        <input type="text" class="form-control" id="inputName" ng-model="form.name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="inputOrigin">Origin</label>
+        <input type="text" class="form-control" id="inputOrigin" ng-model="form.origin" required>
+      </div>
+
+      <div class="form-group">
+        <label for="inputGroup">Group</label>
+        <select class="form-control" id="inputGroup" ng-model="form._group" required
+          ng-options="g._id as g.name for g in groups">
+        </select>
+      </div>
+
+      <div class="form-group">
+        <input class="btn btn-primary btn-block" type="submit" id="submit" value="Add">
+      </div>
+    </form>
+  </div>
+</div>

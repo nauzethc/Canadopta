@@ -13,8 +13,12 @@ angular.module('canadoptaApp', [
         controller: 'MainCtrl'
       })
       .when('/breeds', {
-        templateUrl: 'partials/breed',
-        controller: 'BreedCtrl'
+        templateUrl: 'partials/breed-list',
+        controller: 'BreedListCtrl'
+      })
+      .when('/breeds/:id', {
+        templateUrl: 'partials/breed-detail',
+        controller: 'BreedDetailCtrl'
       })
       .otherwise({
         redirectTo: '/'

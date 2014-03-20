@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('canadoptaApp')
-  .controller('BreedCtrl', function ($scope, Breed, Group) {
+  .controller('BreedListCtrl', function ($scope, Breed, Group) {
 
     $scope.breeds = Breed.query(
       // OK
@@ -30,7 +30,16 @@ angular.module('canadoptaApp')
                 // Clean form
                 $scope.breedForm.$setPristine();
                 $scope.form = {};
-                console.log(newBreed);
+
+                if (webkitNotifications.checkPermission() === 0) {
+                  var notification = webkitNotifications.createNotification(
+                    '',
+                    'New breed added!',
+                    newBreed.name + ' has been added to database'
+                  );
+                  notification.show();
+                }
+
                 $scope.breeds.push(newBreed);
             },
 

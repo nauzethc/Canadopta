@@ -4,9 +4,8 @@ angular.module('canadoptaApp')
 
   .factory('Breed',
     function Breed($resource) {
-      return $resource('/api/breeds/:id', { id: '@id' },
+      return $resource('/api/breeds/:id', { id: '@_id' },
         {
-          query:  { method: 'GET', params: { id: '' }, isArray: true },
           save:   { method: 'PUT'    },
           create: { method: 'POST'   },
           remove: { method: 'DELETE' }

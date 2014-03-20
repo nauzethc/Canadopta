@@ -1,0 +1,75 @@
+<div ng-include="'partials/navbar'"></div>
+
+<div class="row">
+  <div class="col-xs-12">
+
+    <!-- Edit actions -->
+    <div ng-hide="showForm" class="pull-right">
+        <button ng-click="toggleForm()" class="btn btn-sm btn-primary">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+        <button data-toggle="modal" data-target="#deleteBreedModal" class="btn btn-sm btn-danger">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
+
+    <!-- Breed info -->
+    <div class="form-group">
+        <label ng-show="showForm" for="inputName">Name</label>
+        <h3 ng-hide="showForm">{{ breed.name }}</h3>
+        <input ng-show="showForm" class="form-control" type="text" id="inputName" ng-model="breed.name"  required />
+    </div>
+
+    <div class="form-group">
+        <label for="inputOrigin">Origin</label>
+        <p class="form-control-static" ng-hide="showForm">{{ breed.origin }}</p>
+        <input ng-show="showForm" class="form-control" type="text" id="inputOrigin" ng-model="breed.origin" required />
+    </div>
+
+    <div class="form-group">
+        <label for="inputGroup">Group</label>
+        <p class="form-control-static" ng-hide="showForm">{{ group.name }}</p>
+        <select ng-show="showForm" class="form-control" id="inputGroup" ng-model="breed._group" required
+            ng-options="g.id as g.name for g in groups">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="inputGroup">Related</label>
+        <ul ng-hide="showForm">
+          <li ng-repeat="rbreed in relatedBreeds">{{ rbreed.name }}</li>
+        </ul>
+        <select multiple ng-show="showForm" class="form-control" id="inputRelated" ng-model="breed.related" required
+            ng-options="b._id as b.name for b in breeds">
+        </select>
+    </div>
+
+    <!-- Form actions -->
+    <div ng-show="showForm" class="pull-right">
+      <button ng-click="updateBreed()" class="btn btn-sm btn-primary">Save</button>
+      <button ng-click="toggleForm()" class="btn btn-sm btn-danger">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Confirmation modal -->
+<div class="modal fade" id="deleteBreedModal" tabindex="-1" role="dialog"
+    aria-labelledby="deleteModalTitle" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="deleteModalTitle">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete this breed?
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="deleteBreed()" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

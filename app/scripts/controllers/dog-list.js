@@ -1,7 +1,14 @@
 'use strict';
 
 angular.module('canadoptaApp')
-  .controller('BreedListCtrl', function ($scope, $filter, Breed, Group) {
+  .controller('DogListCtrl', function ($scope, Dog, Breed) {
+
+    $scope.dogs = Dog.query(
+      // OK
+      function(dogs, status) {},
+      // Error
+      function(status) {}
+    );
 
     $scope.breeds = Breed.query(
       // OK
@@ -10,41 +17,30 @@ angular.module('canadoptaApp')
       function(status) {}
     );
 
-    $scope.groups = Group.query(
-      // OK
-      function(groups, status) {},
-      // Error
-      function(status) {}
-    );
-
-    $scope.orderGroups = function(group) {
-      return group.group * 100 + group.section;
-    };
-
-    $scope.createBreed = function(form) {
-      if (angular.isUndefined(form.name)   ||
-          angular.isUndefined(form.origin) ) {
+    $scope.createDog = function(form) {
+      if (angular.isUndefined(form.name)) {
           console.log("Incomplete");
 
       } else {
-        Breed.create({}, form,
-            function(newBreed, status) {
+        Dog.create({}, form,
+            function(newDog, status) {
                 // Eimt event for new one added
                 // $scope.$emit('BreedListCtrl.newBreedAdded', resource);
                 // Clean form
-                $scope.breedForm.$setPristine();
+                $scope.dogForm.$setPristine();
                 $scope.form = {};
 
                 if (webkitNotifications.checkPermission() === 0) {
                   var notification = webkitNotifications.createNotification(
                     '',
-                    'New breed added!',
-                    newBreed.name + ' has been added to database'
+                    'New dog added!',
+                    newDog.name + ' has been added to database'
                   );
                   notification.show();
                 }
 
-                $scope.breeds.push(newBreed);
+                $scope.dogs.push(newDog);
+                console.log(newDog);
             },
 
             function(status) {
@@ -55,11 +51,11 @@ angular.module('canadoptaApp')
       }
     };
 
-    $scope.deleteBreed = function(breedId, index) {
-      Breed.remove({ id: breedId },
+    $scope.deleteDog = function(dogId, index) {
+      Dog.remove({ id: dogId },
         // OK
-        function(breed, status) {
-          $scope.breeds.splice(index, 1);
+        function(dog, status) {
+          $scope.dogs.splice(index, 1);
         },
         // Error
         function(status) {

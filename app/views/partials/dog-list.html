@@ -3,27 +3,27 @@
 <div class="row">
   <div class="col-sm-8">
     <ul>
-        <li ng-repeat="breed in breeds">
-          <a href="/breeds/{{ breed._id }}">{{ breed.name }}</a>, {{ breed.origin }} <a ng-click="deleteBreed(breed._id, $index)"><span class="glyphicon glyphicon-remove"></span></a></li>
+        <li ng-repeat="dog in dogs">
+          <a href="/dogs/{{ dog._id }}">{{ dog.name }}</a>, {{ dog._breed.name }} <a ng-click="deleteDog(dog._id, $index)"><span class="glyphicon glyphicon-remove"></span></a></li>
     </ul>
   </div>
 
   <div class="col-sm-4">
-    <form name="breedForm" role="form" ng-submit="createBreed(form)">
+    <form name="dogForm" role="form" ng-submit="createDog(form)">
       <div class="form-group">
         <label for="inputName">Name</label>
         <input type="text" class="form-control" id="inputName" ng-model="form.name" required>
       </div>
 
       <div class="form-group">
-        <label for="inputOrigin">Origin</label>
-        <input type="text" class="form-control" id="inputOrigin" ng-model="form.origin" required>
+        <label for="inputBirth">Birth date</label>
+        <input type="text" class="form-control" id="inputBirth" ng-model="form.birth" required>
       </div>
 
       <div class="form-group">
-        <label for="inputGroup">Group</label>
-        <select class="form-control" id="inputGroup" ng-model="form._group" required
-          ng-options="g._id as g.name group by g.group for g in groups | orderBy:orderGroups">
+        <label for="inputBreed">Breed</label>
+        <select class="form-control" id="inputBred" ng-model="form._breed" required
+          ng-options="b._id as b.name for b in breeds | orderBy:'name'">
         </select>
       </div>
 

@@ -9,6 +9,9 @@ angular.module('canadoptaApp')
       }, {
         'title': 'Breeds',
         'link': '/breeds'
+      }, {
+        'title': 'Dogs',
+        'link': '/dogs'
       }
     ];
 

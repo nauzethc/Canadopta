@@ -20,6 +20,14 @@ angular.module('canadoptaApp', [
         templateUrl: 'partials/breed-detail',
         controller: 'BreedDetailCtrl'
       })
+      .when('/dogs', {
+        templateUrl: 'partials/dog-list',
+        controller: 'DogListCtrl'
+      })
+      .when('/dogs/:id', {
+        templateUrl: 'partials/dog-detail',
+        controller: 'DogDetailCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

@@ -10,35 +10,32 @@ angular.module('canadoptaApp')
       if (!$scope.breeds) $scope.breeds = Breed.query();
     };
 
-    $scope.retrieveGroup = function(groupId) {
-      $scope.group = Group.get({ id: groupId },
-        function(group, status) {}, // OK
-        function(status) {}         // Error
-      );
-    };
 
-    $scope.retrieveRelatedBreeds = function(breeds) {
-      $scope.relatedBreeds = [];
-      for (var i=0, j=breeds.length; i<j; i++) {
-        Breed.get({ id: breeds[i] },
-          function(breed, status) {
-            $scope.relatedBreeds.push(breed);
-          }
-        );
+    // Get related models
+    function populateBreed(breed) {
+      breed.group   = Group.get({ id: breed._group });
+      breed.related = [];
+      for (var i=0, j=breed._related.length; i<j; i++) {
+        Breed.get({ id: breed._related[i] }, function(rbreed, status) {
+          breed.related.push(rbreed);
+        });
       }
     }
 
-    $scope.retrieveBreed = function() {
-      $scope.breed = Breed.get({ id: $routeParams.id },
+
+    // Get current Breed
+    $scope.retrieveBreed = function(_id) {
+      Breed.get({ id: _id },
         function(breed, status) {
-          // OK
-          $scope.retrieveGroup(breed._group);
-          $scope.retrieveRelatedBreeds(breed.related);
+          $scope.breed = breed;
+          populateBreed($scope.breed);
         },
         function(status) {} // Error
       );
     };
 
+
+    // Update current Breed
     $scope.updateBreed = function() {
       if (angular.isUndefined($scope.breed.name)   ||
           angular.isUndefined($scope.breed.origin) ||
@@ -46,29 +43,61 @@ angular.module('canadoptaApp')
         console.log("Incomplete");
       } else {
         $scope.breed.$save(
+          // OK
           function(breed, status){
-            $scope.retrieveGroup(breed._group);
-            $scope.retrieveRelatedBreeds(breed.related);
+            // Emit event for updated one
+            $scope.$emit('BreedDetailCtrl.updateBreed.ok', breed);
+            // Re-populate fields
+            populateBreed($scope.breed);
+            // Disable form
             $scope.toggleForm();
           },
-          function(status){} // Error
+          // Error
+          function(status){
+            // Emit event for error
+            $scope.$emit('BreedDetailCtrl.updateBreed.error', status);
+          }
         );
       }
     };
+
 
     $scope.deleteBreed = function() {
       $('#deleteBreedModal').modal('hide');
       $('#deleteBreedModal').on('hidden.bs.modal', function(event) {
         $scope.breed.$remove(
-
+          // OK
           function(resource, status) {
-            // OK
+            // Emit event for deleted
+            $scope.$emit('BreedDetailCtrl.deleteBreed.ok', breed);
+            // Redirect to main page
             $location.url('/breeds/');
           },
-          function(status) {} // Error
+          // Error
+          function(status) {
+            // Emit event for error
+            $scope.$emit('BreedDetailCtrl.deleteBreed.error', status);
+          }
         );
       });
     };
 
-    $scope.retrieveBreed();
+
+    // Events
+
+    $scope.$on('BreedDetailCtrl.updateBreed.ok', function(event, breed) {
+      console.log(breed);
+    });
+    $scope.$on('BreedDetailCtrl.updateBreed.error', function(event, error) {
+      console.log(error);
+    });
+    $scope.$on('BreedDetailCtrl.deleteBreed.ok', function(event, breed) {
+      console.log(breed);
+    });
+    $scope.$on('BreedDetailCtrl.deleteBreed.error', function(event, error) {
+      console.log(error);
+    });
+
+
+    $scope.retrieveBreed($routeParams.id);
   });

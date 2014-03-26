@@ -17,51 +17,62 @@ angular.module('canadoptaApp')
       function(status) {}
     );
 
+
     $scope.createDog = function(form) {
       if (angular.isUndefined(form.name)) {
           console.log("Incomplete");
 
       } else {
         Dog.create({}, form,
-            function(newDog, status) {
-                // Eimt event for new one added
-                // $scope.$emit('BreedListCtrl.newBreedAdded', resource);
-                // Clean form
-                $scope.dogForm.$setPristine();
-                $scope.form = {};
-
-                if (webkitNotifications.checkPermission() === 0) {
-                  var notification = webkitNotifications.createNotification(
-                    '',
-                    'New dog added!',
-                    newDog.name + ' has been added to database'
-                  );
-                  notification.show();
-                }
-
-                $scope.dogs.push(newDog);
-                console.log(newDog);
-            },
-
-            function(status) {
-                console.log("Error!");
-                console.log(status);
-            }
+          function(dog, status) {
+            // Add to list
+            $scope.dogs.push(dog);
+            // Emit event for new one added
+            $scope.$emit('DogListCtrl.createDog.ok', dog);
+            // Clean form
+            $scope.dogForm.$setPristine();
+            $scope.form = {};
+          },
+          function(status) {
+            // Emit evenf for error
+            $scope.$emit('DogListCtrl.createDog.error', status);
+          }
         );
       }
     };
 
-    $scope.deleteDog = function(dogId, index) {
-      Dog.remove({ id: dogId },
+
+    $scope.deleteDog = function(_id, index) {
+      Dog.remove({ id: _id },
         // OK
         function(dog, status) {
+          // Remove from list
           $scope.dogs.splice(index, 1);
+          // Emit event for deleted one
+          $scope.$emit('DogListCtrl.deleteDog.ok', dog);
         },
         // Error
         function(status) {
-          console.log(status);
+          // Emit event for error
+          $scope.$emit('DogListCtrl.deleteDog.error', status);
         }
       );
     };
+
+
+    // Events
+
+    $scope.$on('DogListCtrl.createDog.ok', function(event, dog) {
+      console.log(dog);
+    });
+    $scope.$on('DogListCtrl.createDog.error', function(event, error) {
+      console.log(error);
+    });
+    $scope.$on('DogListCtrl.deleteDog.ok', function(event, dog) {
+      console.log(dog);
+    });
+    $scope.$on('DogListCtrl.deleteDog.error', function(event, error) {
+      console.log(error);
+    });
 
   });

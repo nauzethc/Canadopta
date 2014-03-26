@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('canadoptaApp')
-  .controller('BreedListCtrl', function ($scope, $filter, Breed, Group) {
+  .controller('BreedListCtrl', function ($scope, Breed, Group) {
 
     $scope.breeds = Breed.query(
       // OK
@@ -17,55 +17,69 @@ angular.module('canadoptaApp')
       function(status) {}
     );
 
+
     $scope.orderGroups = function(group) {
       return group.group * 100 + group.section;
     };
 
+
     $scope.createBreed = function(form) {
       if (angular.isUndefined(form.name)   ||
-          angular.isUndefined(form.origin) ) {
+          angular.isUndefined(form.origin) ||
+          angular.isUndefined(form._group)) {
           console.log("Incomplete");
 
       } else {
         Breed.create({}, form,
-            function(newBreed, status) {
-                // Eimt event for new one added
-                // $scope.$emit('BreedListCtrl.newBreedAdded', resource);
-                // Clean form
-                $scope.breedForm.$setPristine();
-                $scope.form = {};
-
-                if (webkitNotifications.checkPermission() === 0) {
-                  var notification = webkitNotifications.createNotification(
-                    '',
-                    'New breed added!',
-                    newBreed.name + ' has been added to database'
-                  );
-                  notification.show();
-                }
-
-                $scope.breeds.push(newBreed);
-            },
-
-            function(status) {
-                console.log("Error!");
-                console.log(status);
-            }
+          function(breed, status) {
+            // Add to list
+            $scope.breeds.push(breed);
+            // Emit event for new one
+            $scope.$emit('BreedListCtrl.createBreed.ok', breed);
+            // Clean form
+            $scope.breedForm.$setPristine();
+            $scope.form = {};
+          },
+          function(status) {
+            // Emit event for error
+            $scope.$emit('BreedListCtrl.createBreed.error', status);
+          }
         );
       }
     };
 
-    $scope.deleteBreed = function(breedId, index) {
-      Breed.remove({ id: breedId },
+
+    $scope.deleteBreed = function(_id, index) {
+      Breed.remove({ id: _id },
         // OK
         function(breed, status) {
+          // Remove from list
           $scope.breeds.splice(index, 1);
+          // Emit event for deleted one
+          $scope.$emit('BreedListCtrl.deleteBreed.ok', breed);
         },
         // Error
         function(status) {
-          console.log(status);
+          // Emit event for error
+          $scope.$emit('BreedListCtrl.deleteBreed.error', status);
         }
       );
     };
+
+
+    // Events
+
+    $scope.$on('BreedListCtrl.createBreed.ok', function(event, breed) {
+      console.log(breed);
+    });
+    $scope.$on('BreedListCtrl.createBreed.error', function(event, error) {
+      console.log(error);
+    });
+    $scope.$on('BreedListCtrl.deleteBreed.ok', function(event, breed) {
+      console.log(breed);
+    });
+    $scope.$on('BreedListCtrl.deleteBreed.error', function(event, error) {
+      console.log(error);
+    });
 
   });

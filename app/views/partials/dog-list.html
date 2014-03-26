@@ -4,7 +4,7 @@
   <div class="col-sm-8">
     <ul>
         <li ng-repeat="dog in dogs">
-          <a href="/dogs/{{ dog._id }}">{{ dog.name }}</a>, {{ dog._breed.name }} <a ng-click="deleteDog(dog._id, $index)"><span class="glyphicon glyphicon-remove"></span></a></li>
+          <a href="/dogs/{{ dog._id }}">{{ dog.name }}</a>, {{ dog.breed.name }} <a ng-click="deleteDog(dog._id, $index)"><span class="glyphicon glyphicon-remove"></span></a></li>
     </ul>
   </div>
 

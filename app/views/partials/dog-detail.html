@@ -17,7 +17,7 @@
     <div class="form-group">
         <label ng-show="showForm" for="inputName">Name</label>
         <h3 ng-hide="showForm">{{ dog.name }}</h3>
-        <input ng-show="showForm" class="form-control" type="text" id="inputName" ng-model="dog.name"  required />
+        <input ng-show="showForm" class="form-control" type="text" id="inputName" ng-model="dog.name" required />
     </div>
 
     <div class="form-group">
@@ -37,10 +37,10 @@
     <div class="form-group">
         <label for="inputRelated">Related</label>
         <ul ng-hide="showForm">
-          <li ng-repeat="rdog in relatedDogs">{{ rdog.name }}</li>
+          <li ng-repeat="rDog in dog.related">{{ rDog.name }}</li>
         </ul>
-        <select multiple ng-show="showForm" class="form-control" id="inputRelated" ng-model="dog.related" required
-            ng-options="d._id as d.name for d in dogs">
+        <select multiple ng-show="showForm" class="form-control" id="inputRelated" ng-model="dog._related" required
+            ng-options="d._id as d.name for d in dogs | filter:{_id:'!'+dog._id}">
         </select>
     </div>
 

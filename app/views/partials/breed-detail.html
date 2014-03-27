@@ -4,8 +4,8 @@
   <div class="col-xs-4">
       <img ng-if="breed.image" src="images/breeds/{{ breed._id }}.jpg" class="img-responsive" alt="{{ breed.name }}">
       <div ng-show="showForm" class="form-group">
-        <label for="breedImage">Image</label>
-        <input type="file" name="breedImage" class="form-control" id="breedImage">
+        <label for="inputImage">Image</label>
+        <input type="file" class="form-control" id="inputImage">
       </div>
       <div ng-show="showForm" class="form-group">
         <button ng-click="uploadImage()" class="btn btn-sm btn-primary">Upload</button>
@@ -28,19 +28,19 @@
     <div class="form-group">
         <label ng-show="showForm" for="inputName">Name</label>
         <h3 ng-hide="showForm">{{ breed.name }}</h3>
-        <input ng-show="showForm" class="form-control" type="text" id="inputName" ng-model="breed.name" required />
+        <input ng-show="showForm" class="form-control" type="text" id="inputName" ng-model="form.name" required />
     </div>
 
     <div class="form-group">
         <label for="inputOrigin">Origin</label>
         <p class="form-control-static" ng-hide="showForm">{{ breed.origin }}</p>
-        <input ng-show="showForm" class="form-control" type="text" id="inputOrigin" ng-model="breed.origin" required />
+        <input ng-show="showForm" class="form-control" type="text" id="inputOrigin" ng-model="form.origin" required />
     </div>
 
     <div class="form-group">
         <label for="inputGroup">Group</label>
         <p class="form-control-static" ng-hide="showForm">{{ breed.group.name }}</p>
-        <select ng-show="showForm" class="form-control" id="inputGroup" ng-model="breed._group" required
+        <select ng-show="showForm" class="form-control" id="inputGroup" ng-model="form._group" required
             ng-options="g.id as g.name for g in groups">
         </select>
     </div>
@@ -52,7 +52,7 @@
             <a href="/breeds/{{ rBreed._id }}">{{ rBreed.name }}</a>
           </li>
         </ul>
-        <select multiple ng-show="showForm" class="form-control" id="inputRelated" ng-model="breed._related" required
+        <select multiple ng-show="showForm" class="form-control" id="inputRelated" ng-model="form._related" required
             ng-options="b._id as b.name for b in breeds | filter:{_id:'!'+breed._id}">
         </select>
     </div>

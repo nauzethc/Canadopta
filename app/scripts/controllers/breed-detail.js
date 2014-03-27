@@ -5,6 +5,12 @@ angular.module('canadoptaApp')
 
     // Activate form controls
     $scope.toggleForm = function() {
+      $scope.form = {
+        name     : $scope.breed.name,
+        origin   : $scope.breed.origin,
+        _group   : $scope.breed._group,
+        _related : $scope.breed._related
+      };
       $scope.showForm = !$scope.showForm;
       if (!$scope.groups) $scope.groups = Group.query();
       if (!$scope.breeds) $scope.breeds = Breed.query();
@@ -37,11 +43,15 @@ angular.module('canadoptaApp')
 
     // Update current Breed
     $scope.updateBreed = function() {
-      if (angular.isUndefined($scope.breed.name)   ||
-          angular.isUndefined($scope.breed.origin) ||
-          angular.isUndefined($scope.breed._group) ) {
+      if (angular.isUndefined($scope.form.name)   ||
+          angular.isUndefined($scope.form.origin) ||
+          angular.isUndefined($scope.form._group) ) {
         console.log("Incomplete");
       } else {
+        $scope.breed.name     = $scope.form.name;
+        $scope.breed.origin   = $scope.form.origin;
+        $scope.breed._group   = $scope.form._group;
+        $scope.breed._related = $scope.form._related;
         $scope.breed.$save(
           // OK
           function(breed, status){

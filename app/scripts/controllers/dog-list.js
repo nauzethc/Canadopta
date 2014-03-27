@@ -3,18 +3,26 @@
 angular.module('canadoptaApp')
   .controller('DogListCtrl', function ($scope, Dog, Breed) {
 
-    $scope.dogs = Dog.query(
-      // OK
-      function(dogs, status) {},
-      // Error
-      function(status) {}
-    );
-
-    $scope.breeds = Breed.query(
-      // OK
-      function(breeds, status) {},
-      // Error
-      function(status) {}
+    // Get breeds
+    Breed.query(
+      function(breeds, status) {
+        $scope.breeds = breeds;
+        // Create breeds index for getting from dogs
+        $scope._breeds = {};
+        $scope.breeds.forEach(function(breed, i) {
+          $scope._breeds[breed._id] = i;
+        });
+        // Get dogs
+        Dog.query(
+          function(dogs, status) {
+            $scope.dogs = dogs;
+            // Populate breeds on dogs
+            $scope.dogs.forEach(function(dog) {
+              dog.breed = $scope.breeds[ $scope._breeds[dog._breed] ];
+            });
+          }
+        );
+      }
     );
 
 
@@ -25,6 +33,8 @@ angular.module('canadoptaApp')
       } else {
         Dog.create({}, form,
           function(dog, status) {
+            // Populate breed
+            dog.breed = $scope.breeds[ $scope._breeds[dog._breed] ];
             // Add to list
             $scope.dogs.push(dog);
             // Emit event for new one added

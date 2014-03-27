@@ -5,6 +5,12 @@ angular.module('canadoptaApp')
 
     // Activate form controls
     $scope.toggleForm = function() {
+      $scope.form = {
+        name     : $scope.dog.name,
+        birth    : $scope.dog.birth,
+        _breed   : $scope.dog._breed,
+        _related : $scope.dog._related
+      };
       $scope.showForm = !$scope.showForm;
       if (!$scope.breeds) $scope.breeds = Breed.query();
       if (!$scope.dogs)   $scope.dogs   = Dog.query();
@@ -15,11 +21,11 @@ angular.module('canadoptaApp')
     function populateDog(dog) {
       dog.breed   = Breed.get({ id: dog._breed });
       dog.related = [];
-      for (var i=0, j=dog._related.length; i<j; i++) {
-        Dog.get({ id: dog._related[i] }, function(rdog, status) {
+      dog._related.forEach(function(_id){
+        Dog.get({ id: _id }, function(rdog, status) {
           dog.related.push(rdog);
         });
-      }
+      });
     }
 
 
@@ -37,11 +43,16 @@ angular.module('canadoptaApp')
 
     // Update current Dog
     $scope.updateDog = function() {
-      if (angular.isUndefined($scope.dog.name)   ||
-          angular.isUndefined($scope.dog._breed) ||
-          angular.isUndefined($scope.dog.birth) ) {
+      if (angular.isUndefined($scope.form.name)   ||
+          angular.isUndefined($scope.form._breed) ||
+          angular.isUndefined($scope.form.birth) ) {
         console.log("Incomplete");
       } else {
+        $scope.dog.name     = $scope.form.name;
+        $scope.dog.birth    = $scope.form.birth;
+        $scope.dog._breed   = $scope.form._breed;
+        $scope.dog._related = $scope.form._related;
+
         $scope.dog.$save(
           // OK
           function(dog, status){

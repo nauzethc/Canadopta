@@ -15,11 +15,11 @@ angular.module('canadoptaApp')
     function populateBreed(breed) {
       breed.group   = Group.get({ id: breed._group });
       breed.related = [];
-      for (var i=0, j=breed._related.length; i<j; i++) {
-        Breed.get({ id: breed._related[i] }, function(rbreed, status) {
+      breed._related.forEach(function(_id) {
+        Breed.get({ id: _id }, function(rbreed, status) {
           breed.related.push(rbreed);
         });
-      }
+      });
     }
 
 

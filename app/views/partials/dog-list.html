@@ -2,9 +2,11 @@
 
 <div class="row">
   <div class="col-sm-8">
-    <ul>
-        <li ng-repeat="dog in dogs">
-          <a href="/dogs/{{ dog._id }}">{{ dog.name }}</a>, {{ dog.breed.name }} <a ng-click="deleteDog(dog._id, $index)"><span class="glyphicon glyphicon-remove"></span></a></li>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="dog in dogs">
+        <a href="/dogs/{{ dog._id }}">{{ dog.name }}</a>
+        <span class="badge">{{ dog.breed.name }}</span>
+      </li>
     </ul>
   </div>
 

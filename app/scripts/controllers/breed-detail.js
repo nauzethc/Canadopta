@@ -21,11 +21,13 @@ angular.module('canadoptaApp')
     function populateBreed(breed) {
       breed.group   = Group.get({ id: breed._group });
       breed.related = [];
-      breed._related.forEach(function(_id) {
-        Breed.get({ id: _id }, function(rbreed, status) {
-          breed.related.push(rbreed);
+      if (breed._related) {
+        breed._related.forEach(function(_id) {
+          Breed.get({ id: _id }, function(rbreed, status) {
+            breed.related.push(rbreed);
+          });
         });
-      });
+      }
     }
 
 
@@ -52,6 +54,9 @@ angular.module('canadoptaApp')
         $scope.breed.origin   = $scope.form.origin;
         $scope.breed._group   = $scope.form._group;
         $scope.breed._related = $scope.form._related;
+        if ($scope.form.imageData) {
+          $scope.breed.imageData = $scope.form.imageData;
+        }
         $scope.breed.$save(
           // OK
           function(breed, status){
@@ -68,6 +73,23 @@ angular.module('canadoptaApp')
             $scope.$emit('BreedDetailCtrl.updateBreed.error', status);
           }
         );
+      }
+    };
+
+    $scope.loadImage = function() {
+      var image = document.getElementById('inputImage').files[0],
+          reader = new FileReader();
+
+      // On load, assign it to form
+      reader.onloadend = function(event) {
+        $scope.form.imageData = event.target.result;
+      }
+      // Check size
+      if (image.size < 104857600) {
+        reader.readAsDataURL(image);
+        $scope.form.imageCheck = "has-success";
+      } else {
+        $scope.form.imageCheck = "has-error";
       }
     };
 

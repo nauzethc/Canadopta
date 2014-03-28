@@ -2,9 +2,11 @@
 
 <div class="row">
   <div class="col-sm-8">
-    <ul>
-        <li ng-repeat="breed in breeds">
-          <a href="/breeds/{{ breed._id }}">{{ breed.name }}</a>, {{ breed.origin }} <a ng-click="deleteBreed(breed._id, $index)"><span class="glyphicon glyphicon-remove"></span></a></li>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="breed in breeds | orderBy:'name'">
+        <a href="/breeds/{{ breed._id }}">{{ breed.name }}</a>
+        <span class="badge">{{ breed.origin }}</span>
+      </li>
     </ul>
   </div>
 

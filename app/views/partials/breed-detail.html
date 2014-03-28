@@ -2,13 +2,12 @@
 
 <div class="row">
   <div class="col-xs-4">
-      <img ng-if="breed.image" src="images/breeds/{{ breed._id }}.jpg" class="img-responsive" alt="{{ breed.name }}">
-      <div ng-show="showForm" class="form-group">
-        <label for="inputImage">Image</label>
-        <input type="file" class="form-control" id="inputImage">
-      </div>
-      <div ng-show="showForm" class="form-group">
-        <button ng-click="uploadImage()" class="btn btn-sm btn-primary">Upload</button>
+      <img ng-if="breed.image" ng-src="images/breeds/{{ breed._id }}.jpg" class="img-responsive img-thumbnail" alt="{{ breed.name }}">
+      <img ng-if="!breed.image" src="holder.js/230x300/text:No photo" class="img-responsive img-thumbnail" alt="No image" holderjs>
+      <div ng-show="showForm" class="form-group" ng-class="form.imageCheck">
+        <label class="control-label" for="inputImage">Image</label>
+        <input type="file" class="form-control" ng-model="form.image" ng-change="loadImage()" id="inputImage">
+        <span class="help-block">Max size 1Mb</span>
       </div>
   </div>
 
@@ -46,7 +45,7 @@
     </div>
 
     <div class="form-group">
-        <label for="inputGroup">Related</label>
+        <label ng-show="breed.related.length||showForm" for="inputGroup">Related</label>
         <ul ng-hide="showForm">
           <li ng-repeat="rBreed in breed.related">
             <a href="/breeds/{{ rBreed._id }}">{{ rBreed.name }}</a>

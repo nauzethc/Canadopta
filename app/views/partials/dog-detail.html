@@ -27,7 +27,7 @@
 
     <div class="form-group">
         <label for="inputBreed">Breed</label>
-        <p class="form-control-static" ng-hide="showForm">{{ dog.breed.name }}</p>
+        <p class="form-control-static" ng-hide="showForm"><a href="/breeds/{{ dog._breed }}">{{ dog.breed.name }}</a></p>
         <select ng-show="showForm" class="form-control" id="inputBreed" ng-model="form._breed" required
             ng-options="b._id as b.name for b in breeds">
         </select>

@@ -33,4 +33,12 @@ angular.module('canadoptaApp', [
       });
 
     $locationProvider.html5Mode(true);
+  })
+
+  .directive('holderjs', function() {
+    return {
+      link: function(scope, element, attrs) {
+        Holder.run({ images: element[0], nocss: true });
+      }
+    };
   });

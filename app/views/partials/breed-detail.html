@@ -2,11 +2,13 @@
 
 <div class="row">
   <div class="col-xs-4">
-      <img ng-if="breed.image" ng-src="images/breeds/{{ breed._id }}.jpg" class="img-responsive img-thumbnail" alt="{{ breed.name }}">
+      <img ng-if="breed.image" ng-src="images/breeds/{{ breed._id }}.jpg" class="img-responsive img-thumbnail" id="breedImage" alt="{{ breed.name }}">
+
       <img ng-if="!breed.image" src="holder.js/230x300/text:No photo" class="img-responsive img-thumbnail" alt="No image" holderjs>
+
       <div ng-show="showForm" class="form-group" ng-class="form.imageCheck">
-        <label class="control-label" for="inputImage">Image</label>
-        <input type="file" class="form-control" ng-model="form.image" ng-change="loadImage()" id="inputImage">
+        <label class="control-label" for="inputImage"></label>
+        <input type="file" class="form-control" id="inputImage" ng-model="form.image" ng-change="loadImage()">
         <span class="help-block">Max size 1Mb</span>
       </div>
   </div>
@@ -51,7 +53,7 @@
             <a href="/breeds/{{ rBreed._id }}">{{ rBreed.name }}</a>
           </li>
         </ul>
-        <select multiple ng-show="showForm" class="form-control" id="inputRelated" ng-model="form._related" required
+        <select multiple size="8" ng-show="showForm" class="form-control" id="inputRelated" ng-model="form._related" required
             ng-options="b._id as b.name for b in breeds | filter:{_id:'!'+breed._id}">
         </select>
     </div>

@@ -1,0 +1,7 @@
+.droppable {
+  border: 2px dashed;
+}
+
+.droppableOver {
+  opacity: 0.4;
+}

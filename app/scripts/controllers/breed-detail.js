@@ -3,6 +3,8 @@
 angular.module('canadoptaApp')
   .controller('BreedDetailCtrl', function ($scope, $routeParams, $location, Breed, Group) {
 
+    var dropImage;
+
     // Activate form controls
     $scope.toggleForm = function() {
       $scope.form = {
@@ -12,6 +14,16 @@ angular.module('canadoptaApp')
         _related : $scope.breed._related
       };
       $scope.showForm = !$scope.showForm;
+
+      // Toggle draggable
+      if (!dropImage)
+        dropImage = new Dropper.Image(
+          document.getElementById('breedImage'), // Element
+          function(e){ $scope.loadImage(e) }     // Handler
+        );
+      dropImage.toggle();
+
+      // Populate form fields
       if (!$scope.groups) $scope.groups = Group.query();
       if (!$scope.breeds) $scope.breeds = Breed.query();
     };
@@ -76,14 +88,20 @@ angular.module('canadoptaApp')
       }
     };
 
-    $scope.loadImage = function() {
-      var image = document.getElementById('inputImage').files[0],
-          reader = new FileReader();
+    $scope.loadImage = function(e) {
+      var image;
+      if (!e) {
+        image = document.getElementById('inputImage').files[0];
+      } else {
+        image = e.dataTransfer.files[0];
+      }
+      var reader = new FileReader();
 
       // On load, assign it to form
       reader.onloadend = function(event) {
         $scope.form.imageData = event.target.result;
-      }
+        document.getElementById('breedImage').setAttribute('src', event.target.result);
+      };
       // Check size
       if (image.size < 104857600) {
         reader.readAsDataURL(image);

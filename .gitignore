@@ -4,6 +4,7 @@ public
 .sass-cache
 app/bower_components
 app/images/breeds/*
+app/images/dogs/*
 heroku
 /views
 dist

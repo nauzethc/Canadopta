@@ -3,6 +3,8 @@
 angular.module('canadoptaApp')
   .controller('DogDetailCtrl', function ($scope, $routeParams, $location, Dog, Breed) {
 
+    var dropImage;
+
     // Activate form controls
     $scope.toggleForm = function() {
       $scope.form = {
@@ -11,6 +13,15 @@ angular.module('canadoptaApp')
         _breed   : $scope.dog._breed,
         _related : $scope.dog._related
       };
+
+      // Toggle draggable
+      if (!dropImage)
+        dropImage = new Dropper.DroppableImage(
+          document.getElementById('dogImage'),   // Element
+          function(e){ $scope.loadImage(e) }     // Handler
+        );
+      dropImage.toggle();
+
       $scope.showForm = !$scope.showForm;
       if (!$scope.breeds) $scope.breeds = Breed.query();
       if (!$scope.dogs)   $scope.dogs   = Dog.query();
@@ -52,7 +63,9 @@ angular.module('canadoptaApp')
         $scope.dog.birth    = $scope.form.birth;
         $scope.dog._breed   = $scope.form._breed;
         $scope.dog._related = $scope.form._related;
-
+        if ($scope.form.imageData) {
+          $scope.dog.imageData = $scope.form.imageData;
+        }
         $scope.dog.$save(
           // OK
           function(dog, status){
@@ -69,6 +82,30 @@ angular.module('canadoptaApp')
             $scope.$emit('DogDetailCtrl.updatedDog.error', status);
           }
         );
+      }
+    };
+
+
+    $scope.loadImage = function(e) {
+      var image;
+      if (!e) {
+        image = document.getElementById('inputImage').files[0];
+      } else {
+        image = e.dataTransfer.files[0];
+      }
+      var reader = new FileReader();
+
+      // On load, assign it to form
+      reader.onloadend = function(event) {
+        $scope.form.imageData = event.target.result;
+        document.getElementById('dogImage').setAttribute('src', event.target.result);
+      };
+      // Check size
+      if (image.size < 104857600) {
+        reader.readAsDataURL(image);
+        $scope.form.imageCheck = "has-success";
+      } else {
+        $scope.form.imageCheck = "has-error";
       }
     };
 

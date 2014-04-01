@@ -1,7 +1,17 @@
 <div ng-include="'partials/navbar'"></div>
 
 <div class="row">
-  <div class="col-xs-12">
+  <div class="col-xs-4">
+      <img ng-if="dog.image" ng-src="images/dogs/{{ dog._id }}.jpg" class="img-responsive img-thumbnail" id="dogImage" alt="{{ dog.name }}">
+      <img ng-if="!dog.image" src="holder.js/230x300/text:No photo" class="img-responsive img-thumbnail" id="dogImage" alt="No image" holderjs>
+      <div ng-show="showForm" class="form-group" ng-class="form.imageCheck">
+        <label class="control-label" for="inputImage"></label>
+        <input type="file" class="form-control" id="inputImage" ng-model="form.image" ng-change="loadImage()">
+        <span class="help-block">Max size 1Mb</span>
+      </div>
+  </div>
+
+  <div class="col-xs-8">
 
     <!-- Edit actions -->
     <div ng-hide="showForm" class="pull-right">

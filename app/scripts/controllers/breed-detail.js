@@ -17,7 +17,7 @@ angular.module('canadoptaApp')
 
       // Toggle draggable
       if (!dropImage)
-        dropImage = new Dropper.Image(
+        dropImage = new Dropper.DroppableImage(
           document.getElementById('breedImage'), // Element
           function(e){ $scope.loadImage(e) }     // Handler
         );

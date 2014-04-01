@@ -1,7 +1,7 @@
 (function(){
 
 
-function Image(element, callback) {
+function DroppableImage(element, callback) {
   /*
    * Turn HTML IMG element into a droppable zone
    * Toggle drop zone with 'toggle' method
@@ -110,7 +110,7 @@ function Image(element, callback) {
 }
 
 window.Dropper = {
-  Image: Image,
+  DroppableImage: DroppableImage,
 };
 
 })();

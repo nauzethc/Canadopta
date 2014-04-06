@@ -1,8 +1,14 @@
 <div ng-controller="NavbarCtrl" class="navbar navbar-default" role="navigation">
   <div class="navbar-header">
-    <a href="/" class="navbar-brand">Canadopta</a>
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#canadopta-navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="/">Canadopta</a>
   </div>
-  <div class="navbar-collapse collapse">
+  <div class="navbar-collapse collapse" id="canadopta-navbar-collapse">
     <ul class="nav navbar-nav navbar-right">
       <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
         <a ng-href="{{item.link}}">{{item.title}}</a>

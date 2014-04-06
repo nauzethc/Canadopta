@@ -2,9 +2,11 @@
 
 <div class="row">
   <div class="col-xs-4">
-      <img ng-if="breed.image" ng-src="images/breeds/{{ breed._id }}.jpg" class="img-responsive img-thumbnail" id="breedImage" alt="{{ breed.name }}">
+      <img ng-show="showForm" src="holder.js/230x200/text:Drop here" class="img-responsive img-thumbnail" style="margin-bottom: 10px;" id="breedImage" alt="No image" holderjs>
 
-      <img ng-if="!breed.image" src="holder.js/230x300/text:No photo" class="img-responsive img-thumbnail" id="breedImage" alt="No image" holderjs>
+      <a ng-href="{{ image.url }}" ng-repeat="image in breed.images">
+        <img ng-src="{{ image.thumb }}" class="img-responsive" alt="{{ image.description }}">
+      </a>
 
       <div ng-show="showForm" class="form-group" ng-class="form.imageCheck">
         <label class="control-label" for="inputImage"></label>
@@ -44,6 +46,15 @@
         <select ng-show="showForm" class="form-control" id="inputGroup" ng-model="form._group" required
             ng-options="g.id as g.name for g in groups">
         </select>
+    </div>
+
+    <div class="form-group">
+        <label for="inputDescription">Description</label>
+        <div class="form-control-static" ng-hide="showForm" ng-bind-html="breed.description"></div>
+        <textarea
+            class="form-control" id="inputDescription" ng-show="showForm"
+            cols="30" rows="10" ng-model="form.description">
+        </textarea>
     </div>
 
     <div class="form-group">

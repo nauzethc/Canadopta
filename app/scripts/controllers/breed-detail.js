@@ -7,25 +7,35 @@ angular.module('canadoptaApp')
 
     // Activate form controls
     $scope.toggleForm = function() {
-      $scope.form = {
-        name     : $scope.breed.name,
-        origin   : $scope.breed.origin,
-        _group   : $scope.breed._group,
-        _related : $scope.breed._related
-      };
+      if (!$scope.showForm) {
+        $scope.form = {
+          name        : $scope.breed.name,
+          origin      : $scope.breed.origin,
+          _group      : $scope.breed._group,
+          _related    : $scope.breed._related,
+          description : $scope.breed.description,
+          imagesData  : [],
+        };
+
+        // Toggle draggable
+        if (!dropImage)
+          dropImage = new Dropper.DroppableImage(
+            document.getElementById('breedImage'), // Element
+            function(e){ $scope.loadImage(e) }     // Handler
+          );
+        dropImage.toggle();
+
+        // Populate form fields
+        if (!$scope.groups) $scope.groups = Group.query();
+        if (!$scope.breeds) $scope.breeds = Breed.query();
+      } else {
+        var image = document.querySelector('.form-temp-image');
+        while (image) {
+          image.remove();
+          image = document.querySelector('.form-temp-image');
+        }
+      }
       $scope.showForm = !$scope.showForm;
-
-      // Toggle draggable
-      if (!dropImage)
-        dropImage = new Dropper.DroppableImage(
-          document.getElementById('breedImage'), // Element
-          function(e){ $scope.loadImage(e) }     // Handler
-        );
-      dropImage.toggle();
-
-      // Populate form fields
-      if (!$scope.groups) $scope.groups = Group.query();
-      if (!$scope.breeds) $scope.breeds = Breed.query();
     };
 
 
@@ -62,12 +72,13 @@ angular.module('canadoptaApp')
           angular.isUndefined($scope.form._group) ) {
         console.log("Incomplete");
       } else {
-        $scope.breed.name     = $scope.form.name;
-        $scope.breed.origin   = $scope.form.origin;
-        $scope.breed._group   = $scope.form._group;
-        $scope.breed._related = $scope.form._related;
-        if ($scope.form.imageData) {
-          $scope.breed.imageData = $scope.form.imageData;
+        $scope.breed.name        = $scope.form.name;
+        $scope.breed.origin      = $scope.form.origin;
+        $scope.breed._group      = $scope.form._group;
+        $scope.breed._related    = $scope.form._related;
+        $scope.breed.description = $scope.form.description;
+        if ($scope.form.imagesData) {
+          $scope.breed.imagesData = $scope.form.imagesData;
         }
         $scope.breed.$save(
           // OK
@@ -99,8 +110,13 @@ angular.module('canadoptaApp')
 
       // On load, assign it to form
       reader.onloadend = function(event) {
-        $scope.form.imageData = event.target.result;
-        document.getElementById('breedImage').setAttribute('src', event.target.result);
+        $scope.form.imagesData.push(event.target.result);
+        var image = document.createElement('img');
+        image.classList.add('img-responsive', 'form-temp-image');
+        image.setAttribute('src', event.target.result);
+
+        var breedImage = document.getElementById('breedImage');
+        breedImage.parentNode.insertBefore(image, breedImage.nextSibling);
       };
       // Check size
       if (image.size < 104857600) {
@@ -117,7 +133,7 @@ angular.module('canadoptaApp')
       $('#deleteBreedModal').on('hidden.bs.modal', function(event) {
         $scope.breed.$remove(
           // OK
-          function(resource, status) {
+          function(breed, status) {
             // Emit event for deleted
             $scope.$emit('BreedDetailCtrl.deleteBreed.ok', breed);
             // Redirect to main page
